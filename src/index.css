@@ -203,3 +203,16 @@
   0%, 100% { color: hsl(var(--primary)); }
   50% { color: hsl(var(--glow-warn)); }
 }
+
+@keyframes scan-sweep {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* Grid background pattern */
+.grid-bg {
+  background-image: 
+    linear-gradient(hsl(var(--glow-primary) / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--glow-primary) / 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
