@@ -1,6 +1,6 @@
 import GlowCard from "@/components/GlowCard";
 import StatItem from "@/components/StatItem";
-import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, Tooltip, ZAxis, BarChart, Bar, Cell, LineChart, Line, AreaChart, Area } from "recharts";
+import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, Tooltip, ZAxis, BarChart, Bar, Cell, AreaChart, Area } from "recharts";
 
 const qualityDimensions = [
   { dim: "尺寸精度", score: 96 },
@@ -11,7 +11,7 @@ const qualityDimensions = [
   { dim: "平行度", score: 89 },
 ];
 
-const scatterData = Array.from({ length: 50 }, (_, i) => ({
+const scatterData = Array.from({ length: 50 }, () => ({
   x: 10 + Math.random() * 0.08 - 0.04,
   y: 5 + Math.random() * 0.06 - 0.03,
   z: Math.random() * 100,
@@ -55,15 +55,18 @@ const gaugeData = [
 const QualityAnalysis = () => (
   <div className="grid grid-cols-12 gap-2.5 auto-rows-min">
     {/* Row 1 */}
-    <GlowCard className="col-span-2" title="质量总览">
-      <div className="space-y-2">
+    <GlowCard className="col-span-3" title="质量总览">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
         <StatItem label="合格率" value="99.2" unit="%" status="good" />
         <StatItem label="CPK值" value="1.67" status="good" />
         <StatItem label="批次合格" value="47/48" status="good" />
         <StatItem label="待检批次" value={3} />
-        <div className="h-px bg-border/30 my-1" />
+      </div>
+      <div className="h-px bg-border/30 my-2" />
+      <div className="space-y-1">
         {gaugeData.map((g) => (
           <div key={g.label} className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: g.color }} />
             <span className="text-[10px] text-muted-foreground flex-1">{g.label}</span>
             <span className="data-value text-[11px]">{g.value}%</span>
           </div>
@@ -71,8 +74,8 @@ const QualityAnalysis = () => (
       </div>
     </GlowCard>
 
-    <GlowCard className="col-span-4" title="质量雷达图">
-      <ResponsiveContainer width="100%" height={160}>
+    <GlowCard className="col-span-3" title="质量雷达图">
+      <ResponsiveContainer width="100%" height={180}>
         <RadarChart data={qualityDimensions} cx="50%" cy="50%">
           <PolarGrid stroke="hsl(200,40%,20%)" />
           <PolarAngleAxis dataKey="dim" tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} />
@@ -82,10 +85,10 @@ const QualityAnalysis = () => (
     </GlowCard>
 
     <GlowCard className="col-span-3" title="SPC散点图 (尺寸)">
-      <ResponsiveContainer width="100%" height={160}>
+      <ResponsiveContainer width="100%" height={180}>
         <ScatterChart margin={{ top: 5, right: 5, bottom: 5, left: 0 }}>
           <XAxis dataKey="x" tick={{ fontSize: 8, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} name="X" domain={[9.95, 10.05]} />
-          <YAxis dataKey="y" tick={{ fontSize: 8, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} name="Y" domain={[4.96, 5.04]} width={30} />
+          <YAxis dataKey="y" tick={{ fontSize: 8, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} name="Y" domain={[4.96, 5.04]} width={28} />
           <ZAxis dataKey="z" range={[15, 50]} />
           <Tooltip contentStyle={{ background: "hsl(215,30%,10%)", border: "1px solid hsl(200,40%,20%)", borderRadius: 4, fontSize: 10 }} />
           <Scatter data={scatterData} fill="hsl(170,80%,45%)" opacity={0.7} />
@@ -94,18 +97,18 @@ const QualityAnalysis = () => (
     </GlowCard>
 
     <GlowCard className="col-span-3" title="不良类型分布">
-      <ResponsiveContainer width="100%" height={160}>
+      <ResponsiveContainer width="100%" height={180}>
         <BarChart data={defectTypes} layout="vertical" margin={{ left: 5 }}>
           <XAxis type="number" tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} />
           <YAxis type="category" dataKey="type" tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={55} />
-          <Bar dataKey="count" fill="hsl(0,70%,50%)" radius={[0,3,3,0]} barSize={10} />
+          <Bar dataKey="count" fill="hsl(0,70%,50%)" radius={[0,3,3,0]} barSize={12} />
         </BarChart>
       </ResponsiveContainer>
     </GlowCard>
 
     {/* Row 2 */}
     <GlowCard className="col-span-5" title="CPK趋势 (近14天)">
-      <ResponsiveContainer width="100%" height={110}>
+      <ResponsiveContainer width="100%" height={140}>
         <BarChart data={cpkTrend}>
           <XAxis dataKey="day" tick={{ fontSize: 8, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} domain={[0, 2]} width={25} />
@@ -120,7 +123,7 @@ const QualityAnalysis = () => (
     </GlowCard>
 
     <GlowCard className="col-span-7" title="24小时质量趋势">
-      <ResponsiveContainer width="100%" height={110}>
+      <ResponsiveContainer width="100%" height={140}>
         <AreaChart data={qualityTrend}>
           <defs>
             <linearGradient id="qualGrad" x1="0" y1="0" x2="0" y2="1">
@@ -136,7 +139,7 @@ const QualityAnalysis = () => (
       </ResponsiveContainer>
     </GlowCard>
 
-    {/* Row 3: Inspection log */}
+    {/* Row 3 */}
     <GlowCard className="col-span-12" title="检验记录" noPadding>
       <table className="w-full text-xs">
         <thead>

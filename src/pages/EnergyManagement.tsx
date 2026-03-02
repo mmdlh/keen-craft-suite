@@ -54,23 +54,22 @@ const peakValley = [
 
 const EnergyManagement = () => (
   <div className="grid grid-cols-12 gap-2.5 auto-rows-min">
-    {/* Stats */}
-    <GlowCard className="col-span-2" title="今日能耗">
-      <div className="space-y-2">
+    {/* Row 1 */}
+    <GlowCard className="col-span-3" title="今日能耗">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
         <StatItem label="总用电量" value="2,847" unit="kWh" />
         <StatItem label="同比昨日" value="-5.3" unit="%" status="good" trend="down" />
         <StatItem label="电费估算" value="2,419" unit="元" />
         <StatItem label="单件能耗" value="2.28" unit="kWh" status="good" />
-        <div className="h-px bg-border/30 my-1" />
         <StatItem label="能效等级" value="A+" status="good" />
         <StatItem label="碳排放" value="1.87" unit="tCO₂" />
-        <StatItem label="节能目标" value="92" unit="%" status="good" />
       </div>
+      <div className="h-px bg-border/30 my-2" />
+      <StatItem label="节能目标完成" value="92" unit="%" status="good" />
     </GlowCard>
 
-    {/* 24h curve */}
     <GlowCard className="col-span-5" title="24小时功率曲线">
-      <ResponsiveContainer width="100%" height={150}>
+      <ResponsiveContainer width="100%" height={170}>
         <AreaChart data={dailyEnergy}>
           <defs>
             <linearGradient id="powerGrad" x1="0" y1="0" x2="0" y2="1">
@@ -79,14 +78,13 @@ const EnergyManagement = () => (
             </linearGradient>
           </defs>
           <XAxis dataKey="time" tick={{ fontSize: 8, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} interval={3} />
-          <YAxis tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={30} />
+          <YAxis tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={28} />
           <Tooltip contentStyle={{ background: "hsl(215,30%,10%)", border: "1px solid hsl(200,40%,20%)", borderRadius: 4, fontSize: 11 }} />
           <Area type="monotone" dataKey="power" stroke="hsl(35,100%,55%)" fill="url(#powerGrad)" strokeWidth={2} name="功率(kW)" />
         </AreaChart>
       </ResponsiveContainer>
     </GlowCard>
 
-    {/* Pie */}
     <GlowCard className="col-span-2" title="区域分布">
       <ResponsiveContainer width="100%" height={100}>
         <PieChart>
@@ -106,25 +104,23 @@ const EnergyManagement = () => (
       </div>
     </GlowCard>
 
-    {/* Monthly */}
-    <GlowCard className="col-span-3" title="月度能耗趋势">
-      <ResponsiveContainer width="100%" height={150}>
+    <GlowCard className="col-span-2" title="月度能耗">
+      <ResponsiveContainer width="100%" height={170}>
         <BarChart data={monthlyEnergy}>
           <XAxis dataKey="month" tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fontSize: 8, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={35} />
+          <YAxis tick={{ fontSize: 8, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={32} />
           <Tooltip contentStyle={{ background: "hsl(215,30%,10%)", border: "1px solid hsl(200,40%,20%)", borderRadius: 4, fontSize: 11 }} />
-          <Bar dataKey="energy" fill="hsl(190,100%,50%)" radius={[3,3,0,0]} barSize={16} name="实际(kWh)" />
-          <Line type="monotone" dataKey="target" stroke="hsl(0,70%,50%)" strokeWidth={1.5} strokeDasharray="4 4" dot={false} name="目标" />
+          <Bar dataKey="energy" fill="hsl(190,100%,50%)" radius={[3,3,0,0]} barSize={14} name="实际(kWh)" />
         </BarChart>
       </ResponsiveContainer>
     </GlowCard>
 
-    {/* Weekly compare */}
+    {/* Row 2 */}
     <GlowCard className="col-span-4" title="周对比分析">
-      <ResponsiveContainer width="100%" height={120}>
+      <ResponsiveContainer width="100%" height={140}>
         <BarChart data={weeklyCompare}>
           <XAxis dataKey="day" tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fontSize: 8, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={30} />
+          <YAxis tick={{ fontSize: 8, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={28} />
           <Tooltip contentStyle={{ background: "hsl(215,30%,10%)", border: "1px solid hsl(200,40%,20%)", borderRadius: 4, fontSize: 11 }} />
           <Bar dataKey="lastWeek" fill="hsl(210,15%,30%)" radius={[2,2,0,0]} barSize={10} name="上周" />
           <Bar dataKey="thisWeek" fill="hsl(190,100%,50%)" radius={[2,2,0,0]} barSize={10} name="本周" />
@@ -132,29 +128,27 @@ const EnergyManagement = () => (
       </ResponsiveContainer>
     </GlowCard>
 
-    {/* Peak valley */}
     <GlowCard className="col-span-4" title="峰谷电价分析" noPadding>
       <table className="w-full text-[10px]">
         <thead>
           <tr className="text-[9px] text-muted-foreground border-b border-border/30">
-            <th className="text-left py-1 px-2 font-medium">时段</th>
-            <th className="text-right py-1 px-2 font-medium">用电(kWh)</th>
-            <th className="text-right py-1 px-2 font-medium">费用(元)</th>
+            <th className="text-left py-1.5 px-2 font-medium">时段</th>
+            <th className="text-right py-1.5 px-2 font-medium">用电(kWh)</th>
+            <th className="text-right py-1.5 px-2 font-medium">费用(元)</th>
           </tr>
         </thead>
         <tbody>
           {peakValley.map((p, i) => (
             <tr key={i} className="border-b border-border/15">
-              <td className="py-1 px-2 text-muted-foreground">{p.period}</td>
-              <td className="py-1 px-2 text-right data-value">{p.kwh}</td>
-              <td className="py-1 px-2 text-right text-foreground">{p.cost}</td>
+              <td className="py-1.5 px-2 text-muted-foreground">{p.period}</td>
+              <td className="py-1.5 px-2 text-right data-value">{p.kwh}</td>
+              <td className="py-1.5 px-2 text-right text-foreground">{p.cost}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </GlowCard>
 
-    {/* Machine energy ranking */}
     <GlowCard className="col-span-4" title="设备能耗排名">
       <div className="space-y-1.5">
         {machineEnergy.map((m, i) => (
