@@ -1,5 +1,4 @@
 import GlowCard from "@/components/GlowCard";
-import StatItem from "@/components/StatItem";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, BarChart, Bar, ComposedChart, PieChart, Pie, Cell } from "recharts";
 
 const monthlyProduction = [
@@ -68,7 +67,7 @@ const efficiencyByLine = [
 
 const DataReports = () => (
   <div className="grid grid-cols-12 gap-2.5 auto-rows-min">
-    {/* KPI cards */}
+    {/* Row 1: KPI */}
     {kpiSummary.map((k) => (
       <GlowCard key={k.kpi} className="col-span-3">
         <div className="flex items-center justify-between">
@@ -86,9 +85,9 @@ const DataReports = () => (
       </GlowCard>
     ))}
 
-    {/* Monthly production vs target */}
-    <GlowCard className="col-span-5" title="月度产量与目标">
-      <ResponsiveContainer width="100%" height={140}>
+    {/* Row 2 */}
+    <GlowCard className="col-span-4" title="月度产量与目标">
+      <ResponsiveContainer width="100%" height={160}>
         <ComposedChart data={monthlyProduction}>
           <defs>
             <linearGradient id="outputGrad" x1="0" y1="0" x2="0" y2="1">
@@ -97,7 +96,7 @@ const DataReports = () => (
             </linearGradient>
           </defs>
           <XAxis dataKey="month" tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fontSize: 8, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={35} />
+          <YAxis tick={{ fontSize: 8, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={32} />
           <Tooltip contentStyle={{ background: "hsl(215,30%,10%)", border: "1px solid hsl(200,40%,20%)", borderRadius: 4, fontSize: 11 }} />
           <Area type="monotone" dataKey="output" stroke="hsl(190,100%,50%)" fill="url(#outputGrad)" strokeWidth={2} name="实际" />
           <Line type="monotone" dataKey="target" stroke="hsl(35,100%,55%)" strokeWidth={1.5} strokeDasharray="4 4" dot={false} name="目标" />
@@ -105,9 +104,8 @@ const DataReports = () => (
       </ResponsiveContainer>
     </GlowCard>
 
-    {/* OEE breakdown */}
     <GlowCard className="col-span-4" title="OEE分项趋势">
-      <ResponsiveContainer width="100%" height={140}>
+      <ResponsiveContainer width="100%" height={160}>
         <LineChart data={oeeBreakdown}>
           <XAxis dataKey="month" tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fontSize: 8, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} domain={[80, 100]} width={25} />
@@ -119,45 +117,48 @@ const DataReports = () => (
       </ResponsiveContainer>
     </GlowCard>
 
-    {/* Cost pie */}
-    <GlowCard className="col-span-3" title="成本结构">
-      <ResponsiveContainer width="100%" height={90}>
-        <PieChart>
-          <Pie data={costAnalysis} cx="50%" cy="50%" innerRadius={20} outerRadius={38} dataKey="value" stroke="none" paddingAngle={2}>
-            {costAnalysis.map((e, i) => <Cell key={i} fill={e.color} />)}
-          </Pie>
-        </PieChart>
-      </ResponsiveContainer>
-      <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[9px] mt-1">
-        {costAnalysis.map((c) => (
-          <div key={c.item} className="flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: c.color }} />
-            <span className="text-muted-foreground">{c.item}</span>
-            <span className="data-value">{c.value}%</span>
-          </div>
-        ))}
+    <GlowCard className="col-span-4" title="成本结构">
+      <div className="flex gap-3 items-center">
+        <ResponsiveContainer width="45%" height={130}>
+          <PieChart>
+            <Pie data={costAnalysis} cx="50%" cy="50%" innerRadius={25} outerRadius={50} dataKey="value" stroke="none" paddingAngle={2}>
+              {costAnalysis.map((e, i) => <Cell key={i} fill={e.color} />)}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+        <div className="flex flex-col gap-1 text-[10px] flex-1">
+          {costAnalysis.map((c) => (
+            <div key={c.item} className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: c.color }} />
+              <span className="text-muted-foreground flex-1">{c.item}</span>
+              <span className="data-value text-[10px]">{c.value}%</span>
+            </div>
+          ))}
+        </div>
       </div>
     </GlowCard>
 
-    {/* Daily output 30 days */}
-    <GlowCard className="col-span-7" title="近30天日产量">
-      <ResponsiveContainer width="100%" height={110}>
+    {/* Row 3 */}
+    <GlowCard className="col-span-8" title="近30天日产量">
+      <ResponsiveContainer width="100%" height={130}>
         <BarChart data={dailyOutput}>
           <XAxis dataKey="day" tick={{ fontSize: 7, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} interval={2} />
           <YAxis tick={{ fontSize: 8, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={30} />
           <Tooltip contentStyle={{ background: "hsl(215,30%,10%)", border: "1px solid hsl(200,40%,20%)", borderRadius: 4, fontSize: 11 }} />
-          <Bar dataKey="output" fill="hsl(190,100%,50%)" radius={[1,1,0,0]} barSize={8} name="产量" />
+          <Bar dataKey="output" fill="hsl(190,100%,50%)" radius={[1,1,0,0]} barSize={10} name="产量" />
         </BarChart>
       </ResponsiveContainer>
     </GlowCard>
 
-    {/* Downtime reasons */}
-    <GlowCard className="col-span-5" title="停机原因分析">
-      <div className="space-y-2">
+    <GlowCard className="col-span-4" title="停机原因分析">
+      <div className="space-y-2.5">
         {downtimeReasons.map((d) => (
-          <div key={d.reason} className="flex items-center gap-2">
-            <span className="text-[10px] text-foreground w-16">{d.reason}</span>
-            <div className="flex-1 h-2 bg-secondary rounded-full overflow-hidden">
+          <div key={d.reason}>
+            <div className="flex justify-between text-[10px] mb-0.5">
+              <span className="text-foreground">{d.reason}</span>
+              <span className="text-muted-foreground">{d.hours}h ({d.pct}%)</span>
+            </div>
+            <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
               <div className="h-full rounded-full transition-all"
                 style={{
                   width: `${d.pct}%`,
@@ -165,57 +166,54 @@ const DataReports = () => (
                 }}
               />
             </div>
-            <span className="data-value text-[10px] w-8 text-right">{d.hours}h</span>
-            <span className="text-[10px] text-muted-foreground w-8 text-right">{d.pct}%</span>
           </div>
         ))}
       </div>
     </GlowCard>
 
-    {/* Product mix */}
-    <GlowCard className="col-span-4" title="产品组合" noPadding>
-      <table className="w-full text-[10px]">
+    {/* Row 4 */}
+    <GlowCard className="col-span-5" title="产品组合" noPadding>
+      <table className="w-full text-[11px]">
         <thead>
-          <tr className="text-[9px] text-muted-foreground border-b border-border/30">
-            <th className="text-left py-1 px-2 font-medium">产品</th>
-            <th className="text-right py-1 px-2 font-medium">数量</th>
-            <th className="text-right py-1 px-2 font-medium">占比</th>
+          <tr className="text-[10px] text-muted-foreground border-b border-border/30">
+            <th className="text-left py-1.5 px-2 font-medium">产品</th>
+            <th className="text-right py-1.5 px-2 font-medium">数量</th>
+            <th className="text-right py-1.5 px-2 font-medium">占比</th>
           </tr>
         </thead>
         <tbody>
           {productMix.map((p) => (
-            <tr key={p.product} className="border-b border-border/15">
-              <td className="py-1 px-2 text-foreground">{p.product}</td>
-              <td className="py-1 px-2 text-right data-value">{p.qty.toLocaleString()}</td>
-              <td className="py-1 px-2 text-right text-muted-foreground">{p.pct}%</td>
+            <tr key={p.product} className="border-b border-border/15 hover:bg-secondary/20 transition-colors">
+              <td className="py-1.5 px-2 text-foreground">{p.product}</td>
+              <td className="py-1.5 px-2 text-right data-value text-[10px]">{p.qty.toLocaleString()}</td>
+              <td className="py-1.5 px-2 text-right text-muted-foreground">{p.pct}%</td>
             </tr>
           ))}
         </tbody>
       </table>
     </GlowCard>
 
-    {/* Line efficiency */}
-    <GlowCard className="col-span-8" title="各产线效率对比" noPadding>
+    <GlowCard className="col-span-7" title="各产线效率对比" noPadding>
       <table className="w-full text-xs">
         <thead>
           <tr className="text-[10px] text-muted-foreground border-b border-border/30">
-            <th className="text-left py-1.5 px-2 font-medium">产线</th>
-            <th className="text-right py-1.5 px-2 font-medium">OEE</th>
-            <th className="text-right py-1.5 px-2 font-medium">可用率</th>
-            <th className="text-right py-1.5 px-2 font-medium">性能率</th>
-            <th className="text-right py-1.5 px-2 font-medium">质量率</th>
+            <th className="text-left py-1.5 px-3 font-medium">产线</th>
+            <th className="text-right py-1.5 px-3 font-medium">OEE</th>
+            <th className="text-right py-1.5 px-3 font-medium">可用率</th>
+            <th className="text-right py-1.5 px-3 font-medium">性能率</th>
+            <th className="text-right py-1.5 px-3 font-medium">质量率</th>
           </tr>
         </thead>
         <tbody>
           {efficiencyByLine.map((l) => (
             <tr key={l.line} className="border-b border-border/15 hover:bg-secondary/20 transition-colors">
-              <td className="py-1.5 px-2 text-primary font-display text-[11px]">{l.line}</td>
-              <td className="py-1.5 px-2 text-right">
+              <td className="py-1.5 px-3 text-primary font-display text-[11px]">{l.line}</td>
+              <td className="py-1.5 px-3 text-right">
                 <span className={`data-value text-xs ${l.oee >= 85 ? "" : "status-warn"}`}>{l.oee}%</span>
               </td>
-              <td className="py-1.5 px-2 text-right text-foreground">{l.availability}%</td>
-              <td className="py-1.5 px-2 text-right text-foreground">{l.performance}%</td>
-              <td className="py-1.5 px-2 text-right text-foreground">{l.quality}%</td>
+              <td className="py-1.5 px-3 text-right text-foreground">{l.availability}%</td>
+              <td className="py-1.5 px-3 text-right text-foreground">{l.performance}%</td>
+              <td className="py-1.5 px-3 text-right text-foreground">{l.quality}%</td>
             </tr>
           ))}
         </tbody>

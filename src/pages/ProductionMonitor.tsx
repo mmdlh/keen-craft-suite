@@ -1,6 +1,6 @@
 import GlowCard from "@/components/GlowCard";
 import StatItem from "@/components/StatItem";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area, Cell } from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area } from "recharts";
 
 const productionLine = Array.from({ length: 12 }, (_, i) => ({
   time: `${8 + i}:00`,
@@ -46,25 +46,20 @@ const materialConsumption = [
 
 const ProductionMonitor = () => (
   <div className="grid grid-cols-12 gap-2.5 auto-rows-min">
-    {/* Row 1: Key metrics */}
-    <GlowCard className="col-span-2" title="今日产量">
-      <div className="space-y-2">
+    {/* Row 1 */}
+    <GlowCard className="col-span-3" title="生产概览">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
         <StatItem label="完成数" value="1,247" unit="件" trend="up" status="good" />
         <StatItem label="计划数" value="1,340" unit="件" />
         <StatItem label="完成率" value="93.2" unit="%" status="good" />
-      </div>
-    </GlowCard>
-
-    <GlowCard className="col-span-2" title="质量指标">
-      <div className="space-y-2">
         <StatItem label="良品率" value="99.2" unit="%" status="good" />
         <StatItem label="废品数" value={10} unit="件" status="warn" />
         <StatItem label="返工数" value={3} unit="件" />
       </div>
     </GlowCard>
 
-    <GlowCard className="col-span-4" title="实时产量曲线">
-      <ResponsiveContainer width="100%" height={110}>
+    <GlowCard className="col-span-5" title="实时产量曲线">
+      <ResponsiveContainer width="100%" height={150}>
         <AreaChart data={productionLine}>
           <defs>
             <linearGradient id="prodGrad" x1="0" y1="0" x2="0" y2="1">
@@ -73,7 +68,7 @@ const ProductionMonitor = () => (
             </linearGradient>
           </defs>
           <XAxis dataKey="time" tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={30} />
+          <YAxis tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={28} />
           <Tooltip contentStyle={{ background: "hsl(215,30%,10%)", border: "1px solid hsl(200,40%,20%)", borderRadius: 4, fontSize: 11 }} />
           <Area type="monotone" dataKey="actual" stroke="hsl(190,100%,50%)" fill="url(#prodGrad)" strokeWidth={2} name="实际" />
           <Line type="monotone" dataKey="plan" stroke="hsl(35,100%,55%)" strokeWidth={1} strokeDasharray="4 4" dot={false} name="计划" />
@@ -82,19 +77,19 @@ const ProductionMonitor = () => (
     </GlowCard>
 
     <GlowCard className="col-span-4" title="各线每2小时产出">
-      <ResponsiveContainer width="100%" height={110}>
+      <ResponsiveContainer width="100%" height={150}>
         <BarChart data={hourlyOutput}>
           <XAxis dataKey="hour" tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={25} />
           <Tooltip contentStyle={{ background: "hsl(215,30%,10%)", border: "1px solid hsl(200,40%,20%)", borderRadius: 4, fontSize: 11 }} />
-          <Bar dataKey="A线" fill="hsl(190,100%,50%)" radius={[2,2,0,0]} barSize={8} />
-          <Bar dataKey="B线" fill="hsl(170,80%,45%)" radius={[2,2,0,0]} barSize={8} />
-          <Bar dataKey="C线" fill="hsl(280,70%,55%)" radius={[2,2,0,0]} barSize={8} />
+          <Bar dataKey="A线" fill="hsl(190,100%,50%)" radius={[2,2,0,0]} barSize={10} />
+          <Bar dataKey="B线" fill="hsl(170,80%,45%)" radius={[2,2,0,0]} barSize={10} />
+          <Bar dataKey="C线" fill="hsl(280,70%,55%)" radius={[2,2,0,0]} barSize={10} />
         </BarChart>
       </ResponsiveContainer>
     </GlowCard>
 
-    {/* Row 2: Orders + Shifts + Yield */}
+    {/* Row 2 */}
     <GlowCard className="col-span-6" title="生产工单追踪" noPadding>
       <table className="w-full text-xs">
         <thead>
@@ -152,25 +147,30 @@ const ProductionMonitor = () => (
     </GlowCard>
 
     <GlowCard className="col-span-3" title="物料消耗">
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         {materialConsumption.map((m) => (
-          <div key={m.name} className="flex items-center gap-2">
-            <span className="text-[10px] text-muted-foreground w-20 truncate">{m.name}</span>
-            <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
-              <div className="h-full rounded-full bg-primary" style={{ width: `${(m.used / m.total) * 100}%` }} />
+          <div key={m.name}>
+            <div className="flex justify-between text-[10px] mb-0.5">
+              <span className="text-muted-foreground">{m.name}</span>
+              <span className="data-value">{m.used}/{m.total}{m.unit}</span>
             </div>
-            <span className="text-[10px] data-value w-16 text-right">{m.used}/{m.total}{m.unit}</span>
+            <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
+              <div className="h-full rounded-full transition-all" style={{
+                width: `${(m.used / m.total) * 100}%`,
+                background: (m.used / m.total) > 0.85 ? "hsl(0,70%,50%)" : "hsl(190,100%,50%)",
+              }} />
+            </div>
           </div>
         ))}
       </div>
     </GlowCard>
 
-    {/* Row 3: Yield trend */}
+    {/* Row 3 */}
     <GlowCard className="col-span-12" title="良品率趋势">
-      <ResponsiveContainer width="100%" height={80}>
+      <ResponsiveContainer width="100%" height={100}>
         <LineChart data={yieldRate}>
           <XAxis dataKey="time" tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} domain={[96, 100]} width={30} />
+          <YAxis tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} domain={[96, 100]} width={28} />
           <Tooltip contentStyle={{ background: "hsl(215,30%,10%)", border: "1px solid hsl(200,40%,20%)", borderRadius: 4, fontSize: 11 }} />
           <Line type="monotone" dataKey="rate" stroke="hsl(145,70%,45%)" strokeWidth={2} dot={false} name="良品率%" />
           <Line type="monotone" dataKey="target" stroke="hsl(35,100%,55%)" strokeWidth={1} strokeDasharray="4 4" dot={false} name="目标" />

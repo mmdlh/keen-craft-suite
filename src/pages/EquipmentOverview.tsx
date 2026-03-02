@@ -45,44 +45,44 @@ const productionByLine = [
 const EquipmentOverview = () => {
   return (
     <div className="grid grid-cols-12 gap-2.5 auto-rows-min">
-      {/* Row 1: Stats + Pie + Utilization */}
-      <GlowCard className="col-span-2 row-span-2" title="设备概况">
-        <div className="space-y-3">
+      {/* Row 1 */}
+      <GlowCard className="col-span-3" title="设备概况">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
           <StatItem label="设备总数" value={25} unit="台" />
           <StatItem label="运行中" value={18} status="good" />
           <StatItem label="待机" value={4} />
           <StatItem label="维护中" value={2} status="warn" />
           <StatItem label="故障" value={1} status="bad" />
-          <div className="h-px bg-border/30 my-1" />
-          <StatItem label="今日产量" value="1,247" unit="件" trend="up" />
           <StatItem label="综合OEE" value="87.3" unit="%" status="good" />
+        </div>
+        <div className="h-px bg-border/30 my-2" />
+        <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+          <StatItem label="今日产量" value="1,247" unit="件" trend="up" />
           <StatItem label="稼动率" value="91.5" unit="%" status="good" />
         </div>
       </GlowCard>
 
       <GlowCard className="col-span-2" title="状态分布">
-        <div className="flex items-center gap-1">
-          <ResponsiveContainer width="50%" height={100}>
-            <PieChart>
-              <Pie data={pieData} cx="50%" cy="50%" innerRadius={25} outerRadius={42} dataKey="value" stroke="none" paddingAngle={2}>
-                {pieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-          <div className="flex flex-col gap-1.5 text-[11px]">
-            {pieData.map((d) => (
-              <div key={d.name} className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
-                <span className="text-muted-foreground">{d.name}</span>
-                <span className="data-value text-xs">{d.value}</span>
-              </div>
-            ))}
-          </div>
+        <ResponsiveContainer width="100%" height={100}>
+          <PieChart>
+            <Pie data={pieData} cx="50%" cy="50%" innerRadius={25} outerRadius={42} dataKey="value" stroke="none" paddingAngle={2}>
+              {pieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+        <div className="flex flex-col gap-1 text-[10px] mt-1">
+          {pieData.map((d) => (
+            <div key={d.name} className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
+              <span className="text-muted-foreground flex-1">{d.name}</span>
+              <span className="data-value text-[10px]">{d.value}</span>
+            </div>
+          ))}
         </div>
       </GlowCard>
 
-      <GlowCard className="col-span-5" title="24小时设备利用率趋势">
-        <ResponsiveContainer width="100%" height={100}>
+      <GlowCard className="col-span-4" title="24小时设备利用率趋势">
+        <ResponsiveContainer width="100%" height={150}>
           <AreaChart data={utilizationData}>
             <defs>
               <linearGradient id="utilizationGrad" x1="0" y1="0" x2="0" y2="1">
@@ -90,8 +90,8 @@ const EquipmentOverview = () => {
                 <stop offset="100%" stopColor="hsl(190, 100%, 50%)" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <XAxis dataKey="time" tick={{ fontSize: 9, fill: "hsl(210, 15%, 55%)" }} axisLine={false} tickLine={false} interval={3} />
-            <YAxis tick={{ fontSize: 9, fill: "hsl(210, 15%, 55%)" }} axisLine={false} tickLine={false} domain={[0, 100]} width={30} />
+            <XAxis dataKey="time" tick={{ fontSize: 8, fill: "hsl(210, 15%, 55%)" }} axisLine={false} tickLine={false} interval={3} />
+            <YAxis tick={{ fontSize: 9, fill: "hsl(210, 15%, 55%)" }} axisLine={false} tickLine={false} domain={[0, 100]} width={28} />
             <Tooltip contentStyle={{ background: "hsl(215, 30%, 10%)", border: "1px solid hsl(200, 40%, 20%)", borderRadius: 4, fontSize: 11 }} />
             <Area type="monotone" dataKey="rate" stroke="hsl(190, 100%, 50%)" fill="url(#utilizationGrad)" strokeWidth={2} name="利用率%" />
             <Area type="monotone" dataKey="target" stroke="hsl(35, 100%, 55%)" fill="none" strokeWidth={1} strokeDasharray="4 4" name="目标" />
@@ -100,23 +100,23 @@ const EquipmentOverview = () => {
       </GlowCard>
 
       <GlowCard className="col-span-3" title="各线今日产出">
-        <ResponsiveContainer width="100%" height={100}>
+        <ResponsiveContainer width="100%" height={150}>
           <BarChart data={productionByLine}>
             <XAxis dataKey="line" tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={30} />
+            <YAxis tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={28} />
             <Tooltip contentStyle={{ background: "hsl(215,30%,10%)", border: "1px solid hsl(200,40%,20%)", borderRadius: 4, fontSize: 11 }} />
-            <Bar dataKey="yesterday" fill="hsl(210,15%,30%)" radius={[2,2,0,0]} barSize={12} name="昨日" />
-            <Bar dataKey="today" fill="hsl(190,100%,50%)" radius={[2,2,0,0]} barSize={12} name="今日" />
+            <Bar dataKey="yesterday" fill="hsl(210,15%,30%)" radius={[2,2,0,0]} barSize={14} name="昨日" />
+            <Bar dataKey="today" fill="hsl(190,100%,50%)" radius={[2,2,0,0]} barSize={14} name="今日" />
           </BarChart>
         </ResponsiveContainer>
       </GlowCard>
 
-      {/* Row 2: Load trend */}
+      {/* Row 2 */}
       <GlowCard className="col-span-5" title="设备负载趋势">
-        <ResponsiveContainer width="100%" height={100}>
+        <ResponsiveContainer width="100%" height={140}>
           <LineChart data={loadTrend}>
             <XAxis dataKey="time" tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} domain={[40, 100]} width={30} />
+            <YAxis tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} domain={[40, 100]} width={28} />
             <Tooltip contentStyle={{ background: "hsl(215,30%,10%)", border: "1px solid hsl(200,40%,20%)", borderRadius: 4, fontSize: 11 }} />
             <Line type="monotone" dataKey="avg" stroke="hsl(190,100%,50%)" strokeWidth={2} dot={false} name="平均负载%" />
             <Line type="monotone" dataKey="peak" stroke="hsl(0,70%,50%)" strokeWidth={1.5} dot={false} strokeDasharray="3 3" name="峰值%" />
@@ -124,28 +124,24 @@ const EquipmentOverview = () => {
         </ResponsiveContainer>
       </GlowCard>
 
-      <GlowCard className="col-span-3" title="关键指标">
-        <div className="grid grid-cols-2 gap-2">
-          <div className="glass-panel-accent rounded p-2 text-center">
-            <span className="text-[10px] text-muted-foreground block">MTBF</span>
-            <span className="data-value text-sm font-display">186h</span>
-          </div>
-          <div className="glass-panel-accent rounded p-2 text-center">
-            <span className="text-[10px] text-muted-foreground block">MTTR</span>
-            <span className="data-value text-sm font-display">2.3h</span>
-          </div>
-          <div className="glass-panel-accent rounded p-2 text-center">
-            <span className="text-[10px] text-muted-foreground block">停机率</span>
-            <span className="status-warn text-sm font-display">3.2%</span>
-          </div>
-          <div className="glass-panel-accent rounded p-2 text-center">
-            <span className="text-[10px] text-muted-foreground block">报警数</span>
-            <span className="status-bad text-sm font-display">5</span>
-          </div>
+      <GlowCard className="col-span-7" title="关键指标">
+        <div className="grid grid-cols-4 gap-2">
+          {[
+            { label: "MTBF", value: "186h", sub: "平均故障间隔" },
+            { label: "MTTR", value: "2.3h", sub: "平均修复时间" },
+            { label: "停机率", value: "3.2%", sub: "本月累计", warn: true },
+            { label: "报警数", value: "5", sub: "待处理", bad: true },
+          ].map((k) => (
+            <div key={k.label} className="glass-panel-accent rounded p-2.5 text-center">
+              <span className="text-[9px] text-muted-foreground uppercase tracking-wider block">{k.label}</span>
+              <span className={`data-value text-base font-display block mt-1 ${k.warn ? "status-warn" : k.bad ? "status-bad" : ""}`}>{k.value}</span>
+              <span className="text-[8px] text-muted-foreground/60 block mt-0.5">{k.sub}</span>
+            </div>
+          ))}
         </div>
       </GlowCard>
 
-      {/* Row 3: Machine table full width */}
+      {/* Row 3 */}
       <GlowCard className="col-span-12" title="设备实时状态" noPadding>
         <div className="overflow-x-auto">
           <table className="w-full text-xs">

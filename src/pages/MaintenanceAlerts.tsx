@@ -70,21 +70,20 @@ const sparePartsStatus = [
 
 const MaintenanceAlerts = () => (
   <div className="grid grid-cols-12 gap-2.5 auto-rows-min">
-    {/* Top row */}
-    <GlowCard className="col-span-2" title="预警统计">
-      <div className="space-y-2">
+    {/* Row 1 */}
+    <GlowCard className="col-span-3" title="预警统计">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
         <StatItem label="今日预警" value={12} status="warn" />
         <StatItem label="严重告警" value={2} status="bad" />
         <StatItem label="已处理" value={7} status="good" />
         <StatItem label="待处理" value={5} status="warn" />
-        <div className="h-px bg-border/30 my-1" />
         <StatItem label="平均响应" value="8.5" unit="min" />
         <StatItem label="预测故障" value={3} status="warn" />
       </div>
     </GlowCard>
 
     <GlowCard className="col-span-5" title="实时预警信息" variant="warn">
-      <div className="space-y-1.5 max-h-[230px] overflow-y-auto">
+      <div className="space-y-1.5 max-h-[200px] overflow-y-auto">
         {alerts.map((a) => (
           <div key={a.id} className="glass-panel-accent rounded p-2 flex items-start gap-2 hover:bg-secondary/20 transition-colors">
             <StatusBadge status={a.level} />
@@ -101,8 +100,8 @@ const MaintenanceAlerts = () => (
       </div>
     </GlowCard>
 
-    <GlowCard className="col-span-5" title="设备健康度评分">
-      <ResponsiveContainer width="100%" height={230}>
+    <GlowCard className="col-span-4" title="设备健康度评分">
+      <ResponsiveContainer width="100%" height={200}>
         <BarChart data={healthScores} layout="vertical" margin={{ left: 0 }}>
           <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} />
           <YAxis type="category" dataKey="name" tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={50} />
@@ -118,7 +117,7 @@ const MaintenanceAlerts = () => (
 
     {/* Row 2 */}
     <GlowCard className="col-span-4" title="振动监测 (CNC-002)">
-      <ResponsiveContainer width="100%" height={110}>
+      <ResponsiveContainer width="100%" height={140}>
         <LineChart data={vibrationData}>
           <XAxis dataKey="t" tick={{ fontSize: 8, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} domain={[0, 3]} width={25} />
@@ -131,7 +130,7 @@ const MaintenanceAlerts = () => (
     </GlowCard>
 
     <GlowCard className="col-span-4" title="温度趋势">
-      <ResponsiveContainer width="100%" height={110}>
+      <ResponsiveContainer width="100%" height={140}>
         <AreaChart data={tempTrend}>
           <defs>
             <linearGradient id="tempGrad" x1="0" y1="0" x2="0" y2="1">
@@ -150,7 +149,7 @@ const MaintenanceAlerts = () => (
     </GlowCard>
 
     <GlowCard className="col-span-4" title="预警趋势 (近7天)">
-      <ResponsiveContainer width="100%" height={110}>
+      <ResponsiveContainer width="100%" height={140}>
         <BarChart data={alertHistory}>
           <XAxis dataKey="date" tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fontSize: 9, fill: "hsl(210,15%,55%)" }} axisLine={false} tickLine={false} width={20} />
